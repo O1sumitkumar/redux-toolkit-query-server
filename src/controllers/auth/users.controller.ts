@@ -3,14 +3,31 @@ import { Container } from 'typedi';
 import { User } from '@interfaces/users.interface';
 import { UserService } from '@services/users.service';
 
+interface CustomRequest extends Request {
+  user: {
+    _id: string;
+  };
+}
+
 export class UserController {
   public user = Container.get(UserService);
 
-  public getUsers = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const findAllUsersData: User[] = await this.user.findAllUser();
+  // public getUsers = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const findAllUsersData: User[] = await this.user.findAllUser();
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+  //     res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
+
+  public getUsers = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.user._id;
+      const findOneUserData: User = await this.user.findUserById(userId);
+
+      res.status(200).json({ data: findOneUserData, message: 'Get user details successfully' });
     } catch (error) {
       next(error);
     }

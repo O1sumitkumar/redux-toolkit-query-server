@@ -36,6 +36,7 @@ export class TaskController {
       next(error);
     }
   };
+
   public deleteTask = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { _id } = req.body;
